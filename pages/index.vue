@@ -10,7 +10,7 @@ v-container
         DataTable(
           v-if="items.length"
           :headers="headers"
-          :items="items"
+          :items="searchQuery.length < 3 ? items : filteredEntries"
         )
         v-progress-circular(
           v-else
@@ -18,8 +18,10 @@ v-container
           color="rs__primary"
           indeterminate
         ).mx-auto
-        <p> {{ searchQuery }} </p> 
-        <p> {{  filteredEntries }} </p>
+        //- <p> {{ searchQuery }} </p> 
+        //- <ol> 
+        //- <li v-if="searchQuery.length > 2" v-for="entry in filteredEntries" :key="entry.id"> {{entry.user.first_name + " " + entry.user.last_name}}</li>
+        //- </ol>
 
 </template>
 
@@ -36,27 +38,39 @@ export default {
       sales,
       items: [],
       headers: [
-        { text: 'Last Name', value: 'user.last_name'},
         { text: 'First Name', value: 'user.first_name', align: 'start' },
+        { text: 'Last Name', value: 'user.last_name'},
         { text: 'Email', value: 'email' },
         { text: 'Gender', value: 'gender' },
         { text: 'Year', value: 'year' },
         { text: 'Sales', value: 'sales' },
         { text: 'Country', value: 'country' },
       ],
-      searchQuery: '',
-      filteredEntries: []
+      searchQuery: ''
     }
   },
 
   computed: {
+    
     filteredEntries() {
-      return this.items.filter(item => { 
-        return item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      })
-    }
-  },
 
+      function getObjectProps(obj) {
+        let allProps = ""
+        
+        for (const prop in obj) {
+          if (typeof obj[prop] === 'object') {
+            allProps = allProps.concat(getObjectProps(obj[prop]))
+          }
+          else {
+             allProps = allProps.concat(" ", obj[prop])
+          }
+        }
+        return allProps
+      }
+      return this.items.filter((item) => getObjectProps(item).toLowerCase().includes(this.searchQuery))
+    },   
+
+},
 
   async created() {
     this.items = await this.fetchData(0, 50)

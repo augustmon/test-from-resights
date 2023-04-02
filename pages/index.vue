@@ -1,5 +1,10 @@
 <template lang="pug">
-  v-container
+v-container
+    input( 
+      type='text' 
+      v-model="searchQuery" 
+      placeholder='Search for a record...')
+
     v-row
       v-col(cols)
         DataTable(
@@ -13,6 +18,9 @@
           color="rs__primary"
           indeterminate
         ).mx-auto
+        <p> {{ searchQuery }} </p> 
+        <p> {{  filteredEntries }} </p>
+
 </template>
 
 <script>
@@ -28,18 +36,32 @@ export default {
       sales,
       items: [],
       headers: [
-        { text: 'Name', value: 'user', align: 'start' },
+        { text: 'Last Name', value: 'user.last_name'},
+        { text: 'First Name', value: 'user.first_name', align: 'start' },
         { text: 'Email', value: 'email' },
         { text: 'Gender', value: 'gender' },
         { text: 'Year', value: 'year' },
         { text: 'Sales', value: 'sales' },
         { text: 'Country', value: 'country' },
       ],
+      searchQuery: '',
+      filteredEntries: []
     }
   },
+
+  computed: {
+    filteredEntries() {
+      return this.items.filter(item => { 
+        return item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      })
+    }
+  },
+
+
   async created() {
     this.items = await this.fetchData(0, 50)
   },
+
   methods: {
     async fetchData(page, size) {
       const start = page * size

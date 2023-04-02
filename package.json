@@ -15,10 +15,12 @@
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.3",
+    "@volar/vue-language-plugin-pug": "^1.2.0",
     "fibers": "^5.0.0",
     "pug": "^3.0.0",
     "pug-plain-loader": "^1.1.0",
     "sass": "^1.32.6",
     "sass-loader": "^10.1.1"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }

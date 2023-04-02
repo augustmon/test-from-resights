@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-data-table(
+v-data-table(
     :headers="headers"
     :items="items"
     item-key="email"
@@ -11,8 +11,7 @@
 export default {
   props: ['headers', 'items'],
   data() {
-    return {
-      
+    return {   
     }
   }
 }

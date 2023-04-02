@@ -1,10 +1,17 @@
+
+
 <template lang="pug">
 v-container
-    input( 
-      type='text' 
-      v-model="searchQuery" 
-      placeholder='Search for a record...')
-
+    v-row 
+      v-col(
+        md=3)
+        v-text-field( 
+          type='text' 
+          v-model="searchQuery" 
+          placeholder='Search for a record...'
+          append-icon="mdi-magnify"
+          single-line
+          hide-details)
     v-row
       v-col(cols)
         DataTable(

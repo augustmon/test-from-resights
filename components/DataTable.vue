@@ -6,35 +6,33 @@ v-data-table(
     :items="items"
     item-key="email"
     dense
-    @update:page="(page) => emitPageNumber(page)"
-    @update:items-per-page='(rows) => emitPageSize(rows)'
-    :items-per-page="pageSize"
-
-
-      
-  ).elevation-1.mt-10
-
+    @update:page="(page) => $emit('new-page-number', page)"
+    @update:items-per-page="(rows) => $emit('new-page-size', rows)"
     
+    :loading="loading"
+
+    :items-per-page="pageSize"
+    :page="currentPage"
+
+    :server-items-length="1000"
+    :footer-props="{itemsPerPageOptions: [5,10,15,25] }"
+  ).elevation-1.mt-10
+    //- v-data-footer(
+
+    //- )
   
 
 </template>
 
 <script>
 export default {
-  props: ['headers', 'items', 'page', 'pageSize'],
+  props: ['headers', 'items', 'currentPage', 'pageSize', 'loading', 'options'],
   data() {
-    return {   
-      currentPage: 'page'
-    }
-  },
-  emits: ['new-page-number', 'newRows'],
+    return {  
+  }
+},
+  emits: ['new-page-number', 'new-page-size'],
   methods: {
-    emitPageNumber(page) {
-      this.$emit('new-page-number', page);
-    },
-    emitPageSize(rows) {
-      this.$emit('new-page-size', rows)
-    }
   }
 }
 </script>

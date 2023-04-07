@@ -18,6 +18,8 @@ v-container
           v-if="items.length"
           :headers="headers"
           :items="searchQuery.length < 3 ? items : filteredEntries"
+          @new-page-number="(page) => updatePageNumber(page)"
+          @new-page-size="(rows) => updatePageSize(rows)"
         )
         v-progress-circular(
           v-else
@@ -25,11 +27,7 @@ v-container
           color="rs__primary"
           indeterminate
         ).mx-auto
-        //- <p> {{ searchQuery }} </p> 
-        //- <ol> 
-        //- <li v-if="searchQuery.length > 2" v-for="entry in filteredEntries" :key="entry.id"> {{entry.user.first_name + " " + entry.user.last_name}}</li>
-        //- </ol>
-
+    <p> {{ pageNumber }}</p>
 </template>
 
 <script>
@@ -53,17 +51,18 @@ export default {
         { text: 'Sales', value: 'sales' },
         { text: 'Country', value: 'country' },
       ],
-      searchQuery: ''
+      pageNumber: 1,
+      pageSize: 10, 
+      searchQuery: '',
+      fetchedEntries: 20
+
     }
   },
 
   computed: {
-    
     filteredEntries() {
-
       function getObjectProps(obj) {
         let allProps = ""
-        
         for (const prop in obj) {
           if (typeof obj[prop] === 'object') {
             allProps = allProps.concat(getObjectProps(obj[prop]))
@@ -76,21 +75,37 @@ export default {
       }
       return this.items.filter((item) => getObjectProps(item).toLowerCase().includes(this.searchQuery))
     },   
+  },
 
-},
+  watch: {
+    async pageNumber(number) {
+      if (this.fetchedEntries < (this.pageNumber*this.pageSize) + this.pageSize ) {
+        let pageLoad = await this.fetchData(Math.ceil(this.fetchedEntries)/this.pageSize, this.pageSize)
+        this.items = [...this.items, ...pageLoad]
+        this.fetchedEntries += pageLoad.length
+      }
+    }
+  },
 
   async created() {
-    this.items = await this.fetchData(0, 50)
+    this.items = await this.fetchData(0, this.pageSize*2)
   },
 
   methods: {
     async fetchData(page, size) {
       const start = page * size
+      const end = start + size
       await this.delay(3000)
-      return await sales.results.slice(start, start + size)
+      return await sales.results.slice(start, end)
     },
     delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms))
+    },
+    updatePageNumber(number) {
+      this.pageNumber = number
+    },
+    updatePageSize(rows) {
+      this.pageSize = rows
     }
   }
 }

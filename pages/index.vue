@@ -20,6 +20,7 @@ v-container
           :items="searchQuery.length < 3 ? items : filteredEntries"
           @new-page-number="(page) => updatePageNumber(page)"
           @new-page-size="(rows) => updatePageSize(rows)"
+          :pageSize="pageSize"
         )
         v-progress-circular(
           v-else
@@ -28,6 +29,7 @@ v-container
           indeterminate
         ).mx-auto
     <p> {{ pageNumber }}</p>
+    <v-pagination v-model="page" :length="100" :total-visible="10"> </v-pagination>
 </template>
 
 <script>
@@ -73,6 +75,7 @@ export default {
         }
         return allProps
       }
+      
       return this.items.filter((item) => getObjectProps(item).toLowerCase().includes(this.searchQuery))
     },   
   },

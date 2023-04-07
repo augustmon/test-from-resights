@@ -1,4 +1,6 @@
 <template lang="pug">
+
+
 v-data-table(
     :headers="headers"
     :items="items"
@@ -6,12 +8,20 @@ v-data-table(
     dense
     @update:page="(page) => emitPageNumber(page)"
     @update:items-per-page='(rows) => emitPageSize(rows)'
+    :items-per-page="pageSize"
+
+
+      
   ).elevation-1.mt-10
+
+    
+  
+
 </template>
 
 <script>
 export default {
-  props: ['headers', 'items', 'page', 'items-per-page'],
+  props: ['headers', 'items', 'page', 'pageSize'],
   data() {
     return {   
       currentPage: 'page'

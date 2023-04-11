@@ -214,8 +214,9 @@ export default {
       }
       //// FILTERED SEARCH ////
       else {        
-        // NUMBER
         const thisFilter = this.activeFilter.includes('.') ? this.activeFilter.split('.') : this.activeFilter
+        
+        // NUMBER
         if (thisFilter === "year") {
           this.fetchData(1, 999)
         .then(data => data.filter((item) => item[thisFilter].toString().includes(this.searchQuery)))
@@ -228,17 +229,18 @@ export default {
           this.loading = false})
       }
 
-      else {
-        this.fetchData(1, 999)
-        .then(data => data.filter((item) => 
-        (typeof thisFilter == "object" ? item[thisFilter[0]][thisFilter[1]] : item[thisFilter])
-        .toLowerCase()?.includes(this.searchQuery.toLowerCase?.())))
-        .then(result => {
-          this.totalSearchItems = result.length; 
-          const start = (this.currentPage-1) * this.pageSize
-          const end = start + this.pageSize
-          this.searchItems = result.slice(start,end)
-          this.loading = false})
+        // OTHER 
+        else {
+          this.fetchData(1, 999)
+          .then(data => data.filter((item) => 
+          (typeof thisFilter == "object" ? item[thisFilter[0]][thisFilter[1]] : item[thisFilter])
+          .toLowerCase()?.includes(this.searchQuery.toLowerCase?.())))
+          .then(result => {
+            this.totalSearchItems = result.length; 
+            const start = (this.currentPage-1) * this.pageSize
+            const end = start + this.pageSize
+            this.searchItems = result.slice(start,end)
+            this.loading = false})
         }
       }
     },

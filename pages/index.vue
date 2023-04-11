@@ -195,7 +195,7 @@ export default {
         this.fetchData(1, 999)
         .then(data => data.filter((item) => this.getObjectProps(item)
         .toLowerCase()
-        .includes(this.searchQuery))).then(result => {
+        .includes(this.searchQuery.toLowerCase()))).then(result => {
           this.totalSearchItems = result.length; 
           const start = (this.currentPage-1) * this.pageSize
           const end = start + this.pageSize
@@ -210,7 +210,7 @@ export default {
         .then(data => data.filter((item) => 
         (typeof thisFilter == "object" ? item[thisFilter[0]][thisFilter[1]] : item[thisFilter])
         .toLowerCase()
-        .includes(this.searchQuery)))
+        .includes(this.searchQuery.toLowerCase())))
         .then(result => {
           this.totalSearchItems = result.length; 
           const start = (this.currentPage-1) * this.pageSize

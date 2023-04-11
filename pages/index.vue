@@ -13,7 +13,7 @@ v-container
         @click:append = 'searchQuery ? searchQuery = "" : refresh'
         hide-details)
     v-col(
-      md=2)
+      md=3)
       v-select(
         :items="[headers[0],headers[1],headers[2],headers[3],headers[6]]"
         label="Search in column"
@@ -105,15 +105,26 @@ export default {
           }
         },
 
-      sortBy() {
-        this.loading = true
+    sortBy() {
+      if (this.searchQuery.length > 2) {
+        this.performAPISearch()
+      }
+      else {
+        this.loading = true 
         this.fetchData(this.currentPage, this.pageSize).then(data => {
-          this.items = data; this.loading = false});
+        this.items = data; this.loading = false}); 
+          }
       },
-      sortDesc() {
+    sortDesc() {
+      if  (this.searchQuery.length > 2) {
+        this.performAPISearch()
+      }
+      
+      else {
         this.loading = true
         this.fetchData(this.currentPage, this.pageSize).then(data => {
-          this.items = data; this.loading = false});
+        this.items = data; this.loading = false});
+        }
       }
       },
 

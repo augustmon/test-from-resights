@@ -22,7 +22,10 @@ v-data-table(
       v-btn(
         @click="() => $emit('refresh')" 
         icon 
-        color='gray')
+        color='gray'
+        :loading="loading"
+        
+        )
         v-icon mdi-cached
     
   

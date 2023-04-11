@@ -15,7 +15,7 @@ v-container
     v-col(
       md=3)
       v-select(
-        :items="[headers[0],headers[1],headers[2],headers[3],headers[6]]"
+        :items="[headers[0],headers[1],headers[2],headers[3],headers[4],headers[6]]"
         label="Search in column"
         clearable
         @change='(event) => activeFilter = event' 
@@ -204,9 +204,8 @@ export default {
       //// CLEAR SEARCH ////
       if (this.activeFilter == null || this.activeFilter == undefined) {
         this.fetchData(1, 999)
-        .then(data => data.filter((item) => this.getObjectProps(item)
-        .toLowerCase()
-        .includes(this.searchQuery.toLowerCase()))).then(result => {
+        .then(data => data.filter((item) => this.getObjectProps(item)?.toLowerCase()
+        .includes(this.searchQuery?.toLowerCase()))).then(result => {
           this.totalSearchItems = result.length; 
           const start = (this.currentPage-1) * this.pageSize
           const end = start + this.pageSize
@@ -215,19 +214,32 @@ export default {
       }
       //// FILTERED SEARCH ////
       else {        
+        // NUMBER
         const thisFilter = this.activeFilter.includes('.') ? this.activeFilter.split('.') : this.activeFilter
-    
+        if (thisFilter === "year") {
+          this.fetchData(1, 999)
+        .then(data => data.filter((item) => item[thisFilter].toString().includes(this.searchQuery)))
+        .then(result => {
+          console.log("RESULT", result)
+          this.totalSearchItems = result.length; 
+          const start = (this.currentPage-1) * this.pageSize
+          const end = start + this.pageSize
+          this.searchItems = result.slice(start,end)
+          this.loading = false})
+      }
+
+      else {
         this.fetchData(1, 999)
         .then(data => data.filter((item) => 
         (typeof thisFilter == "object" ? item[thisFilter[0]][thisFilter[1]] : item[thisFilter])
-        .toLowerCase()
-        .includes(this.searchQuery.toLowerCase())))
+        .toLowerCase()?.includes(this.searchQuery.toLowerCase?.())))
         .then(result => {
           this.totalSearchItems = result.length; 
           const start = (this.currentPage-1) * this.pageSize
           const end = start + this.pageSize
           this.searchItems = result.slice(start,end)
           this.loading = false})
+        }
       }
     },
 

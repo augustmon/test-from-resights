@@ -13,7 +13,7 @@ v-data-table(
     :items-per-page="pageSize"
     :page="currentPage"
     :server-items-length="serverItemsLength"
-    :footer-props="{itemsPerPageOptions: [5,10,20] }"
+    :footer-props="{itemsPerPageOptions: [5,10,20,30] }"
     :sort-by="sortBy"
     :sort-desc="sortDesc"
   ).elevation-1.mt-0
